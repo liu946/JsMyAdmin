@@ -1,0 +1,28 @@
+{
+  "name": "js-my-admin",
+  "version": "0.0.1",
+  "description": "mysql gui by node angular",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mysql",
+    "gui"
+  ],
+  "author": "Michael Liu",
+  "license": "MIT",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "koa": "^1.2.0",
+    "koa-ejs": "^3.0.0",
+    "koa-formidable": "^1.0.0",
+    "koa-ip-filter": "^2.0.0",
+    "koa-logger": "^1.3.0",
+    "koa-mysql": "^1.0.3",
+    "koa-parameter": "^2.0.0",
+    "koa-router": "^5.4.0",
+    "koa-rt": "0.0.2",
+    "path": "^0.12.7"
+  }
+}
