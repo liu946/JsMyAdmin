@@ -5,7 +5,15 @@
 'use strict';
 
 const router = require('../../router');
+const db = require('../../db');
+
 
 router.get('/view/:template', function*() {
-  yield this.render(this.params.template);
+  const row = yield* db.query.call(this, 'select 1+1');
+  this.body = row;
 });
+
+require('./table');
+require('./database');
+
+

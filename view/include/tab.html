@@ -1,0 +1,19 @@
+<% var tab = route[2] ? route[2] : 'index' %>
+<% var tabs = {'index': '主页','select': '查询', 'update': '更新(soon)', 'insert': '插入', 'delete': '删除'} %>
+<% var remainStr = '' %>
+<% for (p of ['database', 'table']) { %>
+<% remainStr += (query[p] ? (p+'='+query[p]+'&') : '')  %>
+<% } %>
+<div class="breadcrumbs_container" style="margin: 10px">
+  <ul class="nav nav-tabs">
+    <% for (key in tabs) { %>
+    <li role="presentation" <% if (key === tab) { %> class="active" <% } else { %> class="tab" <% } %>>
+      <a href="/table/<%= key+ '?' + remainStr %>"><%= tabs[key] %></a>
+    </li>
+    <% } %>
+  </ul>
+</div>
+
+<% if (query.alert) {%>
+<h4 class="alert_<%= query.alert %>"><%- query.alert_message %></h4>
+<% } %>

@@ -16,9 +16,10 @@ db.query = function*() {
     return rows;
   }
   catch (err) {
-    // 500 Internal Server Error
-    this.status = 500;
-    this.body = { error: err };
+    this.query.alert = 'error';
+    this.query.alert_message = '执行' + arguments[0] + '出错<br/>'+ err;
+    this.params.template = 'blank';
+    return null;
   }
   return;
 };

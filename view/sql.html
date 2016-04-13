@@ -1,0 +1,12 @@
+<% include template/contentHead.html %>
+
+<% include include/tab.html %>
+
+<% include include/sql.html %>
+
+<% if (data) { %>
+  <% var table = data %>
+  <% include include/table.html %>
+<% } %>
+
+<% include template/contentFooter.html %>

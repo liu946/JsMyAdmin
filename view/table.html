@@ -1,0 +1,14 @@
+<% include template/contentHead.html %>
+
+<% if (route[1] === 'table') { %>
+  <% include include/tab.html %>
+<% } %>
+
+<% for (var tableIndex = 0; tableIndex < data.length; tableIndex++) { %>
+  <% if (data[tableIndex].tableName) { %>
+    <% var table = data[tableIndex] %>
+    <% include include/table.html %>
+  <% } %>
+<% } %>
+
+<% include template/contentFooter.html %>

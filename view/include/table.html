@@ -1,0 +1,26 @@
+<article class="module width_full">
+  <header><h3 class="tabs_involved"><%= table.tableName %></h3>
+  </header>
+  <% if (table.length) { %>
+    <table class="tablesorter" cellspacing="0">
+      <thead>
+      <tr>
+        <% for (key in table[0]) { %>
+          <th><%= key %></th>
+        <% } %>
+      </tr>
+      </thead>
+      <tbody>
+      <% for (i = 0; i < table.length; i++) { %>
+        <tr>
+          <% for (key in table[i]) { %>
+            <td><%= table[i][key] %></td>
+          <% } %>
+        </tr>
+      <% } %>
+      </tbody>
+    </table>
+  <% } else { %>
+  <div class="tab_container"><h4 style="margin-left: 3%"> No data can be SHOW!! </h4></div>
+  <% } %>
+</article><!-- end of content manager article -->

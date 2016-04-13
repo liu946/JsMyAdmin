@@ -1,0 +1,19 @@
+<section id="secondary_bar">
+  <div class="user">
+    <p><%= config.db.user  %> (host: <%= config.db.host  %>)</p>
+    <!-- <a class="logout_user" href="#" title="Logout">Logout</a> -->
+  </div>
+  <div class="breadcrumbs_container">
+    <article class="breadcrumbs" style="box-sizing: content-box;">
+      <a href="/"><%= config.db.host %></a>
+      <% if (query.database) { %>
+        <div class="breadcrumb_divider"></div>
+        <a href="/database?database=<%= query.database %>"><%= query.database %></a>
+        <% if (query.table) { %>
+          <div class="breadcrumb_divider"></div>
+          <a href="/table?database=<%= query.database %>&table=<%= query.table %>"><%= query.table %></a>
+        <% } %>
+      <% } %>
+    </article>
+  </div>
+</section><!-- end of secondary bar -->

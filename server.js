@@ -4,6 +4,8 @@
 'use strict';
 
 const koa = require('koa');
+const ms = require('ms');
+const staticCache = require('koa-static-cache');
 const http = require('http');
 const config = require('./config');
 const logger = require('koa-logger');
@@ -40,6 +42,14 @@ if (!config.debug) {
   }));
 }
 
+//静态资源缓存
+app.use(staticCache({
+  dir: path.join(__dirname, './static'),
+  prefix: '/static',
+  maxAge: ms('1y'),
+  buffer: true,
+  gzip: false,
+}));
 
 //解析http头
 app.use(formidable());
@@ -48,6 +58,10 @@ app.use(formidable());
 if (config.debug) {
   app.use(middlewares.showBody());
 }
+
+// 加载公用参数
+app.use(middlewares.addingStructure());
+
 
 ////如无错误发生，添加200状态码
 //app.use(middlewares.addStatusCode());

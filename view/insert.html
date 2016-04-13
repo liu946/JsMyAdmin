@@ -1,0 +1,32 @@
+<% include template/contentHead.html %>
+
+<% include include/tab.html %>
+
+<form action="<%= route.join('/')+'?database='+query.database+'&table='+query.table %>" method="post">
+  <div class="panel-heading">
+    <h3 class="panel-title">插入数据</h3>
+  </div>
+  <div class="panel-body">
+      <div class="panel panel-default">
+        <div class="panel-heading">插入数据条目</div>
+        <div class="panel-body">
+          <table class="tablesorter" >
+            <% for (var fieldRow of data.structure) { %>
+            <tr>
+              <td><%= fieldRow.Field %></td>
+              <td><input name="<%= fieldRow.Field %>" type="text"/></td>
+            </tr>
+            <% } %>
+          </table>
+        </div>
+      </div>
+  </div>
+  <footer>
+    <div class="submit_link">
+      <input type="submit" value="插入" class="alt_btn">
+    </div>
+  </footer>
+</form>
+</div>
+
+<% include template/contentFooter.html %>

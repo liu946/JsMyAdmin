@@ -1,0 +1,107 @@
+<% include template/contentHead.html %>
+
+<% include include/tab.html %>
+
+<form class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">组合条件查询</h3>
+  </div>
+  <div class="panel-body">
+    <% query.condition = query.condition?query.condition:1 %>
+    <div class="panel">
+      <form action="<%= route.join('/')+'?database='+query.database+'&table='+query.table %>" method="get">
+        <input type="hidden" name="database" value="<%= query.database %>">
+        <input type="hidden" name="table" value="<%= query.table %>">
+        <input type="text"   name="condition" value="<%= query.condition %>">
+        <input type="submit" value="相或条件个数" class="alt_btn">
+      </form>
+    </div>
+    <form action="<%= route.join('/')+'?database='+query.database+'&table='+query.table %>&condition=<%= query.condition %>" method="post">
+      <% for (var conditionI = 0; conditionI < query.condition; conditionI++) { %>
+      <div class="panel panel-default">
+        <div class="panel-heading">AND条件组合</div>
+        <div class="panel-body">
+          <table class="tablesorter" >
+            <% for (var fieldRow of data.structure) { %>
+            <tr>
+              <td><%= fieldRow.Field %></td>
+              <td>
+                <select name="<%= fieldRow.Field %>_Type[<%= conditionI %>]">
+                  <option value="=">=</option>
+                  <option value=">">&gt;</option>
+                  <option value=">=">&gt;=</option>
+                  <option value="<">&lt;</option>
+                  <option value="<=">&lt;=</option>
+                  <option value="!=">!=</option>
+                  <option value="LIKE %...%">LIKE %...%</option>
+                  <option value="NOT LIKE %...%">NOT LIKE</option>
+                  <option value="IN (...)">IN (...)</option>
+                  <option value="NOT IN (...)">NOT IN (...)</option>
+                  <option value="BETWEEN (...)">BETWEEN (...)</option>
+                  <option value="NOT BETWEEN (...)">NOT BETWEEN (...)</option>
+                </select>
+              </td>
+              <td><input name="<%= fieldRow.Field %>[<%= conditionI %>]" type="text"></td>
+            </tr>
+            <% } %>
+          </table>
+        </div>
+      </div>
+      <% } %>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">字段筛选 SELECT ... </div>
+        <div class="panel-body">
+          <% for (var fieldRow of data.structure) { %>
+            <input name="__isGet[<%= fieldRow.Field %>]" type="checkbox" checked /> <%= fieldRow.Field %><br/>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">LIMIT 参数</div>
+        <div class="panel-body">
+          <input name="__LIMIT" type="text" placeholder="输入“A,B”表示从A开始的B个数据。" value="" style="width: 500px;" />
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">排序</div>
+        <div class="panel-body">
+          <table class="tablesorter" >
+            <tr>
+              <td>
+                <select name="__ORDER">
+                  <option value="">无</option>
+                  <% for (var fieldRow of data.structure) { %>
+                    <option value="<%= fieldRow.Field %>"><%= fieldRow.Field %></option>
+                  <% } %>
+                </select>
+              </td>
+              <td>
+                DESC <input name="__ORDER_DESC" type="checkbox" />
+              <td>
+            </tr>
+          </table>
+        </div>
+      </div>
+  </div>
+  <footer>
+    <div class="submit_link">
+      <input type="submit" value="查询" class="alt_btn">
+    </div>
+  </footer>
+  </form>
+</div>
+
+
+<% if (data.selectResult) { %>
+  <% for (var tableIndex = 0; tableIndex < data.length; tableIndex++) { %>
+    <% if (data[tableIndex].tableName) { %>
+      <% var table = data[tableIndex] %>
+      <% include include/table.html %>
+    <% } %>
+  <% } %>
+<% } %>
+
+<% include template/contentFooter.html %>

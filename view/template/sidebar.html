@@ -1,0 +1,30 @@
+<aside id="sidebar" class="column" ng-controller="DbStructure">
+  <% /* 快速查找前端保留接口
+  <!--<form class="quick_search">-->
+    <!--<input type="text" placeholder="查找数据库" ng-model="query">-->
+  <!--</form>-->
+  <!--<hr/>-->
+  */ %>
+  <% for (db in structure) { %>
+    <h3>
+      <a href="/database?database=<%= db %>">
+        <%= db %>
+      </a>
+    </h3>
+    <ul class="toggle">
+      <li class="icn_new_article"><a href="#">新建数据表</a></li>
+      <% for (table in structure[db]) { %>
+      <li class="icn_categories">
+        <a href="/table?database=<%= db %>&table=<%= structure[db][table] %>"><%= structure[db][table] %></a>
+      </li>
+      <% } %>
+    </ul>
+  <% } %>
+
+  <footer>
+    <hr />
+    <p><strong>Copyright &copy; 2016 <%= config.author %></strong></p>
+    <!--thanks to Theme provider-->
+    <!--<p>Theme by <a href="http://www.medialoot.com">MediaLoot</a></p>-->
+  </footer>
+</aside><!-- end of sidebar -->

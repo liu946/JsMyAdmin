@@ -6,6 +6,9 @@ const path = require('path');
 
 let config = {};
 
+config.siteName = '数据库管理系统';
+config.author = 'Michael Liu';
+
 config.db = {
   host: '127.0.0.1',
   dialect: 'mysql',

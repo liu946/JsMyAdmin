@@ -6,7 +6,7 @@
 const router = require('../router');
 const db = require('../db');
 
-router.get('/sql/:sql', function*() {
+router.get('/sql', function*() {
   let row = yield* db.query(this.params.sql);
   this.body = JSON.stringify(row);
 });

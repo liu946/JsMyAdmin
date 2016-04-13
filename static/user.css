@@ -1,0 +1,12 @@
+.action_control {
+    float: right !important;
+}
+
+.current_control {
+
+}
+
+li.tab > a {
+    color: #A2A2A2 !important;
+    text-decoration: none;
+}
