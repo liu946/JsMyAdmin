@@ -54,11 +54,6 @@ app.use(staticCache({
 //解析http头
 app.use(formidable());
 
-//显示参数
-if (config.debug) {
-  app.use(middlewares.showBody());
-}
-
 // 加载公用参数
 app.use(middlewares.addingStructure());
 

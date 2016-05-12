@@ -19,6 +19,9 @@ const meaningField = [
   'TABLE_COMMENT as COMMENT',
 ];
 
+/**
+ * 显示某数据库表信息
+ */
 router.get('/database', function*() {
   this.data = [];
 

@@ -6,6 +6,12 @@
 const router = require('../../router');
 const db = require('../../db');
 
+/**
+ * 生成表结构（DESCRIBE tableName）
+ * 表的预览信息（SELECT * FROM tableName LIMIT 0,10）
+ *
+ * 调用生成模板：table
+ */
 function* tableIndex(){
   this.data = [];
 
@@ -22,6 +28,12 @@ function* tableIndex(){
 router.get('/table', tableIndex);
 router.get('/table/index', tableIndex);
 
+/**
+ * 表查找界面
+ * 需要提供的参数：表结构（DESCRIBE tableName）
+ *
+ * 调用生成模板：select
+ */
 router.get('/table/select', function*() {
   this.data = {};
   this.data.selectResult = null;
@@ -31,6 +43,13 @@ router.get('/table/select', function*() {
 
 });
 
+/**
+ * 表查找结果界面
+ * 需要提供的参数： 表结构（DESCRIBE tableName）
+ *                查找的SQL语句（）
+ *
+ * 调用生成模板：select
+ */
 router.post('/table/select', function*() {
 
   const tbDes = ' `' + this.query.database + '`.`' + this.query.table + '` ';
@@ -49,6 +68,7 @@ router.post('/table/select', function*() {
       }
     }
   }
+  // 组合 AND 逻辑
   const andArray = conditionArray.map(function(x) {
     if (!x) return ' 1 ';
     let andList = [];
@@ -59,7 +79,7 @@ router.post('/table/select', function*() {
     return ' ( '+ andList.join(' AND ') +' ) ';
   });
 
-
+  // 拼装 筛选字段信息 SELECT (...) FROM WHERE
   let selectField = [];
   for (let row of structure) {
     if (querySet['__isGet' + '[' + row.Field + ']'] === 'on') {
@@ -68,14 +88,18 @@ router.post('/table/select', function*() {
   }
   let sql = 'SELECT ' + selectField.join(',') + ' FROM ' + tbDes;
 
+  // 拼装 选择条件信息 SELECT FROM WHERE ...
+  // 组合 OR 逻辑
   if (andArray.length) {
     sql += (' WHERE ' + andArray.join(' OR '));
   }
 
+  // 拼装 ORDER 字段 SELECT FROM WHERE ORDER BY ...
   if (querySet.__ORDER) {
     sql += (' ORDER BY ' + querySet.__ORDER + ('on' === querySet.__ORDER_DESC ? ' DESC ': ' ASC '));
   }
 
+  // 拼装 LIMIT 字段 SELECT FROM WHERE ORDER BY LIMIT ...
   if (querySet.__LIMIT) {
     sql += (' LIMIT ' + querySet.__LIMIT);
   }
@@ -90,6 +114,12 @@ router.post('/table/select', function*() {
   this.params.template = 'table';
 
 });
+/**
+ * 将condition选项对象SQL序列化
+ * @param obj
+ * @param name
+ * @returns {string}
+ */
 function conditionToString(obj, name) {
   switch (obj.type) {
     case 'LIKE %...%':
@@ -106,9 +136,15 @@ function conditionToString(obj, name) {
       return ' NOT ('+name+' > ' + obj.value.split(',')[0] + ' AND '+name+' < ' + obj.value.split(',')[1] + ')';
     default :
   }
-  return name + ' ' + obj.type + ' ' + obj.value + ' ';
+  return name + ' ' + obj.type + ' "' + obj.value + '" ';
 }
 
+/**
+ * 表插入界面
+ * 需要提供的参数：表结构（DESCRIBE tableName）
+ *
+ * 调用生成模板：insert
+ */
 router.get('/table/insert', function*() {
   this.data = {};
   const tbDes = ' `' + this.query.database + '`.`' + this.query.table + '` ';
@@ -116,18 +152,28 @@ router.get('/table/insert', function*() {
   this.params.template = 'insert';
 });
 
+/**
+ * 表插入执行
+ * 需要提供的参数： 表结构（DESCRIBE tableName）
+ *                执行的SQL语句（INSERT INTO tableName (,,,) VALUES (,,,); ）
+ *
+ * 调用生成模板：insert
+ */
 router.post('/table/insert', function*() {
   const tbDes = ' `' + this.query.database + '`.`' + this.query.table + '` ';
   const structure = yield* db.query.call(this, 'DESCRIBE ' + tbDes );
   let querySet = this.request.body;
   let fieldArray = [];
   let valueArray = [];
+  // 拼装插入的字段
   for (let row of structure) {
     if (querySet[row.Field]) {
       fieldArray.push(row.Field);
       valueArray.push(querySet[row.Field]);
     }
   }
+
+  // 拼装插入的数据
   let sql = 'INSERT INTO ' + tbDes + ' (`' + fieldArray.join('`,`') + '`) VALUES ("' + valueArray.join('","') + '")';
   const res = yield* db.query.call(this, sql );
   if (!res) return;
@@ -136,6 +182,13 @@ router.post('/table/insert', function*() {
   this.params.template = 'blank';
 });
 
+
+/**
+ * 表删除界面
+ * 需要提供的参数：表结构（DESCRIBE tableName）
+ *
+ * 调用生成模板：delete
+ */
 router.get('/table/delete', function*() {
   this.data = {};
   this.data.selectResult = null;
@@ -143,7 +196,13 @@ router.get('/table/delete', function*() {
   this.data.structure = yield* db.query.call(this, 'DESCRIBE ' + tbDes );
   this.params.template = 'delete';
 });
-
+/**
+ * 表删除执行
+ * 需要提供的参数： 表结构（DESCRIBE tableName）
+ *                查询构造参数
+ *
+ * 调用生成模板：delete
+ */
 router.post('/table/delete', function*() {
   const tbDes = ' `' + this.query.database + '`.`' + this.query.table + '` ';
   const structure = yield* db.query.call(this, 'DESCRIBE ' + tbDes );
